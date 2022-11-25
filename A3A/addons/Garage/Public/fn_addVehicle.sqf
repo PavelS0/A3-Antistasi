@@ -59,7 +59,7 @@ private _ltcRefund = {
         true
     } else {10};
 };
-if (_class in [FactionGet(occ,"surrenderCrate"), FactionGet(inv,"surrenderCrate")]) exitWith {[_vehicle] call _ltcRefund};
+if (_class in [FactionGet(occ,"surrenderCrate"), FactionGet(inv,"surrenderCrate"), FactionGet(occ,"ammobox"), FactionGet(inv,"ammobox")]) exitWith {[_vehicle] call _ltcRefund};
 
 //Utility refund
 private _utilityRefund = {
@@ -138,7 +138,7 @@ private _unloadAceCargo = {
         if (typeOf _x in ["ACE_Wheel", "ACE_Track"]) then { continue };
         [_x, _this] call ace_cargo_fnc_unloadItem;
 
-        if (typeOf _x in [FactionGet(occ,"surrenderCrate"), FactionGet(inv,"surrenderCrate")]) then { _toRefund = _toRefund + ([_x, false] call _ltcRefund) };
+        if (typeOf _x in [FactionGet(occ,"surrenderCrate"), FactionGet(inv,"surrenderCrate"), FactionGet(occ,"ammobox"), FactionGet(inv,"ammobox")]) then { _toRefund = _toRefund + ([_x, false] call _ltcRefund) };
         if (_x getVariable ['A3A_canGarage', false]) then { _toRefund = _toRefund + ([_x, false] call _utilityRefund) };
     } forEach (_this getVariable ["ace_cargo_loaded", []]);
 

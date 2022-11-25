@@ -30,7 +30,8 @@ _unit setVariable ["BuyCrateCooldown",time + 5];
 ["Loot crate", "Loot crate bought."] call A3A_fnc_customHint;
 
 //spawn crate
-private _createType = FactionGet(occ,"surrenderCrate");
+private _crateVariant = if (not LTCBoxSize) then { "surrenderCrate" } else { "ammobox" };
+private _createType = FactionGet(occ, _crateVariant);
 _position = (getPos _unit) findEmptyPosition [1,10,_createType];
 if (_position isEqualTo []) then {_position = getPos _unit};
 private _crate = _createType createVehicle _position;

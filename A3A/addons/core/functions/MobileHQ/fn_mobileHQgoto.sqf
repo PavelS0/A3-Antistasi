@@ -30,7 +30,8 @@ onMapSingleClick {
 		private _hq = mobileHQ select _index;
 		if (((crew _hq) findIf {alive _x}) > -1) then {
 			private _x = mobileHQ select _index; 
-			player setPos (getPos _x);
+			player setPos ((getPos _x) findEmptyPosition [5, 50]);
+
 			["Дислокация в штаб", "Успешно"] call A3A_fnc_customHint;
 		} else {
 			["Дислокация в штаб", "Невозможно дислоцироваться в штаб, пока в нём отсутствует живого солдата"] call A3A_fnc_customHint;

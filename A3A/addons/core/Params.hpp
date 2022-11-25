@@ -315,6 +315,22 @@ class Params
         default = 0;
     };
 
+    class LTCRadius
+    {
+        title = "Loot to crate radius";
+        values[] = {10, 20, 35, 60, 80, 110};
+        texts[] = {"10","20","35","60","80","110"};
+        default = 10;
+    };
+
+    class LTCBoxSize
+    {
+        title = "Loot to crate box size";
+        values[] = {0, 1};
+        texts[] = {"default", "large"};
+        default = 0;
+    };
+
     class SpacerDevelopment
     {
         title = "";
@@ -505,4 +521,5 @@ class Params
         texts[] = {"None","1","3","5","10","15"};
         default = 3;
     };
+  
 };
