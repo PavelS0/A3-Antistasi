@@ -1,0 +1,3 @@
+mobileHQ = [];
+
+publicVariable "mobileHQ";

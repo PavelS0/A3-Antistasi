@@ -281,6 +281,22 @@ class CfgFunctions
             class spawnDebuggingLoop {};
         };
 
+        class Highcommand {
+            file = QPATHTOFOLDER(functions\Highcommand);
+            class hcInit {};
+            class hcSplitGroup {};
+            class hcMergeGroup {};
+        };
+
+        class MobileHQ {
+            file = QPATHTOFOLDER(functions\MobileHQ);
+            class mobileHQinitClient {};
+            class mobileHQinitServer {};
+            class mobileHQspawn {};
+            class mobileHQdelete {};
+            class mobileHQgoto {};
+        };
+
         class Dialogs {
             file = QPATHTOFOLDER(functions\Dialogs);
             class buyVehicle {};

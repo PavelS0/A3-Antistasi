@@ -58,3 +58,42 @@ class CfgMPGameTypes {
         description = "";
     };
 };
+
+class RscGroupRootMenu
+{
+    class Items
+    {
+        class SplitToHC
+        {
+            class Params
+            {
+                expression = "[player] call A3A_fnc_hcSplitGroup";
+            };
+            title = "<img color='#e5e500' image='\A3\ui_f\data\igui\cfg\simpleTasks\types\radio_ca.paa'/><t>Отделить выделенных юнитов в новую группу</t>";
+            show = "1";
+            enable = "1";
+            speechId = 0;
+            command = -5;
+        };
+    };
+};
+
+
+class RscHCGroupRootMenu
+{
+    class Items
+    {
+        class MergeToGroup
+        {
+            class Params
+            {
+                expression = "[hcSelected player] call A3A_fnc_hcMergeGroup";
+            };
+            title = "<img color='#e5e500' image='\A3\ui_f\data\igui\cfg\simpleTasks\types\radio_ca.paa'/><t>Вернуть группу в свой отряд</t>";
+            show = "";
+            enable = "HCNotEmpty";
+            speechId = 0;
+            command = -5;
+        };
+    };
+};

@@ -281,4 +281,6 @@ savingServer = false;           // enable saving
     };
 };
 
+call A3A_fnc_mobileHQinitServer;
+
 Info("initServer completed");

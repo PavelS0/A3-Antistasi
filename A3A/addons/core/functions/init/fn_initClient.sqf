@@ -452,6 +452,10 @@ if (isNil "placementDone") then {
     };
 };
 
+[] call A3A_fnc_hcInit;
+[] call A3A_fnc_mobileHQinitClient;
+//
+
 Info("initClient completed");
 
 if(!isMultiplayer) then
