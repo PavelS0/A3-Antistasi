@@ -5,7 +5,6 @@ FIX_LINE_NUMBERS()
 logLevel = "LogLevel" call BIS_fnc_getParamValue; publicVariable "logLevel"; //Sets a log level for feedback, 1=Errors, 2=Information, 3=DEBUG
 A3A_logDebugConsole = "A3A_logDebugConsole" call BIS_fnc_getParamValue; publicVariable "A3A_logDebugConsole";
 
-
 Info("Server init started");
 Info_1("Server version: %1", QUOTE(VERSION_FULL));
 
@@ -58,20 +57,17 @@ call A3A_fnc_addNodesNearMarkers;		// Needs data from both the above
 Info("Server JNA preload started");
 ["Preload"] call jn_fnc_arsenal;
 
-// UPSMON
-Info("UPSMON init started");
-[] call compile preprocessFileLineNumbers QPATHTOFOLDER(Scripts\Init_UPSMON.sqf);
-
 Info("Background init completed");
 A3A_backgroundInitDone = true;
 
+Info("Server Initialising PATCOM Variables");
+[] call A3A_fnc_patrolInit;
 
 // **************** Starting game, param-dependent init *******************************
 
 // Wait until we have selected/created save data
 waitUntil {sleep 0.1; !isNil "A3A_saveData"};
-
-[localize "STR_A3A_feedback_serverinfo", localize "STR_A3A_feedback_serverinfo_starting"] remoteExec ["A3A_fnc_customHint", 0];
+A3A_startupState = "starting"; publicVariable "A3A_startupState";
 
 // Use true params list in case we're loading an autosave from a different version
 private _savedParamsHM = createHashMapFromArray (A3A_saveData get "params");
@@ -109,6 +105,8 @@ if (_startType != "new") then
     A3A_saveTarget = [A3A_saveData get "serverID", A3A_saveData get "gameID", worldName];
     // Sanity checks? hmm
 
+    Info_1("Loading campaign with ID %1", A3A_saveData get "gameID");
+
     // Do the actual game loading
     call A3A_fnc_loadServer;
 }
@@ -129,7 +127,7 @@ else
     call A3A_fnc_checkRadiosUnlocked;
 
     // HQ placement setup
-    _posHQ = A3A_saveData get "startPos";
+    private _posHQ = A3A_saveData get "startPos";
     // Disable all nearby roadblocks/specops
     {
         if (markerPos _x distance _posHQ < distanceSPWN) then {
@@ -138,7 +136,6 @@ else
     } forEach controlsX;
     petros setPos _posHQ;
     [_posHQ, true] call A3A_fnc_relocateHQObjects;         // sets all the other vars
-    placementDone = true; publicVariable "placementDone";           // do we need this now?
 };
 
 if (_startType != "load") then {
@@ -146,8 +143,12 @@ if (_startType != "load") then {
     private _serverID = profileNamespace getVariable ["ss_serverID", ""];
     _serverID = [_serverID, false] select (A3A_saveData get "useNewNamespace");
 
-    // TODO: check collisions or build into UI
+    // Create new campaign ID, avoiding collisions
+    private _allIDs = call A3A_fnc_collectSaveData apply { _x get "gameID" };
     private _newID = str(floor(random(90000) + 10000));
+    while { _newID in _allIDs } do { _newID = str(floor(random(90000) + 10000)) };
+
+    Info_1("Creating new campaign with ID %1", _newID);
 
     A3A_saveTarget = [_serverID, _newID, worldName];
 };
@@ -224,7 +225,12 @@ addMissionEventHandler ["EntityKilled", {
     params ["_victim", "_killer", "_instigator"];
     if (typeof _victim == "") exitWith {};
     private _killerSide = side group (if (isNull _instigator) then {_killer} else {_instigator});
-    Debug_2("%1 killed by %2", typeof _victim, _killerSide);
+    if (isPlayer _killer) then {
+        private _killerUID = getPlayerUID _killer;
+        Debug_3("%1 killed by %2. Killer UID: %3", typeof _victim, _killerSide, _killerUID);
+    } else {
+        Debug_2("%1 killed by %2", typeof _victim, _killerSide);
+    };
 
     if !(isNil {_victim getVariable "ownerSide"}) then {
         // Antistasi-created vehicle
@@ -234,10 +240,9 @@ addMissionEventHandler ["EntityKilled", {
 }];
 
 
-[localize "STR_A3A_feedback_serverinfo", localize "STR_A3A_feedback_serverinfo_completed"] remoteExec ["A3A_fnc_customHint", 0];
-
 serverInitDone = true; publicVariable "serverInitDone";
 Info("Setting serverInitDone as true");
+A3A_startupState = "completed"; publicVariable "A3A_startupState";
 
 
 // ********************* Initialize loops *******************************************
@@ -245,6 +250,7 @@ Info("Setting serverInitDone as true");
 [] spawn A3A_fnc_distance;                          // Marker spawn loop
 [] spawn A3A_fnc_resourcecheck;                     // 10-minute loop
 [] spawn A3A_fnc_aggressionUpdateLoop;              // 1-minute loop
+[] spawn A3A_fnc_garbageCleanerTracker;             // 5-minute loop
 
 savingServer = false;           // enable saving
 
@@ -279,6 +285,17 @@ savingServer = false;           // enable saving
         [] call A3A_fnc_logPerformance;
         sleep _logPeriod;
     };
+};
+
+
+if ((isClass (configfile >> "CBA_Extended_EventHandlers")) && (
+    isClass (configfile >> "CfgPatches" >> "lambs_danger"))) then {
+    // disable lambs danger fsm entrypoint
+    ["CAManBase", "InitPost", {
+        params ["_unit"];
+        (group _unit) setVariable ["lambs_danger_disableGroupAI", true];
+        _unit setVariable ["lambs_danger_disableAI", true];
+    }] call CBA_fnc_addClassEventHandler;
 };
 
 call A3A_fnc_mobileHQinitServer;

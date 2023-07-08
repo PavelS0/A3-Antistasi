@@ -59,6 +59,8 @@ class CfgMPGameTypes {
     };
 };
 
+#include "CfgMarkers.hpp"
+
 class RscGroupRootMenu
 {
     class Items
@@ -97,3 +99,5 @@ class RscHCGroupRootMenu
         };
     };
 };
+
+
