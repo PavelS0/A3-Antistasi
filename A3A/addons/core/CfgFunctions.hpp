@@ -363,6 +363,7 @@ class CfgFunctions
             class cityinfo {};
             class clientIdleChecker {};
             class credits {};
+            class initACE {};
             class initACEUnconsciousHandler {};
             class initBases {};
             class initUtilityItems {};
@@ -376,6 +377,7 @@ class CfgFunctions
 
             class initVehClassToCrew {};
             class initZones {};
+            class initZeusLogging {};
             class modBlacklist {};
             class playerMarkers {};
             class prepareMarkerArrays {};
@@ -758,6 +760,7 @@ class CfgFunctions
             class setIdentity {};
             class setIdentityLocal {};
             class setPos {};
+            class createRandomIdentity {};
             class vehicleTextureSync {};
             class vehicleWillCollideAtPosition {};
             class getRoadDirection {};

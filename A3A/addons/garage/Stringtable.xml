@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project name="A3-Antistasi">
-  <Package name="A3-Antistasi Mission">
+  <Package name="A3-Antistasi garage">
     <Container name="HR_GRG">
       <Key ID="STR_HR_GRG_Generic_Cancel">
         <Original>Cancel</Original>
@@ -523,6 +523,9 @@
         <Czech>Žádné vozidlo</Czech>
         <Italian>Nessun veicolo selezionato</Italian>
         <Polish>Nie wybrano pojazdu</Polish>
+      </Key>
+      <Key ID="STR_HR_GRG_Feedback_toggleLock_limit">
+        <Original>You have too many vehicles locked</Original>
       </Key>
       <Key ID="STR_HR_GRG_Feedback_addVehicle_SATow">
         <Original>You can't garage a Vehicle with your Tow Rope out or a Vehicle attached</Original>
